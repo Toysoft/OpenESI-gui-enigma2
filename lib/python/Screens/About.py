@@ -22,14 +22,28 @@ def getAboutText():
 	AboutText = ""
 	AboutText += _("Model:\t%s %s\n") % (getMachineBrand(), getMachineName())
 
+	bootloader = ""
+	if path.exists('/sys/firmware/devicetree/base/bolt/tag'):
+		f = open('/sys/firmware/devicetree/base/bolt/tag', 'r')
+		bootloader = f.readline().replace('\x00', '').replace('\n', '')
+		f.close()
+		AboutText += _("Bootloader:\t\t%s\n") % (bootloader)
+
 	if path.exists('/proc/stb/info/chipset'):
 		AboutText += _("Chipset:\t%s") % about.getChipSetString() + "\n"
 
 	cpuMHz = ""
-	if getMachineBuild() in ('vusolo4k', 'hd51'):
+	if getMachineBuild() in ('vusolo4k'):
 		cpuMHz = "   (1,5 GHz)"
-	elif getMachineBuild() in ('hd52'):
-		cpuMHz = "   (1,7 GHz)"
+	elif getMachineBuild() in ('hd52','hd51'):
+		try:
+			import binascii
+			f = open('/sys/firmware/devicetree/base/cpus/cpu@0/clock-frequency', 'rb')
+			clockfrequency = f.read()
+			f.close()
+			cpuMHz = "   (%s MHz)" % str(round(int(binascii.hexlify(clockfrequency), 16)/1000000,1))
+		except:
+			cpuMHz = "   (1,7 GHz)"
 	else:
 		if path.exists('/proc/cpuinfo'):
 			f = open('/proc/cpuinfo', 'r')
