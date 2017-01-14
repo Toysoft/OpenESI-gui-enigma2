@@ -18,7 +18,7 @@ def InitUsageConfig():
 	config.misc.remotecontrol_text_support = ConfigYesNo(default = True)
 
 	config.workaround = ConfigSubsection()
-	config.workaround.blueswitch = ConfigSelection(default = "0", choices = [("0", _("QuickMenu/Extensions")), ("1", _("Extensions/QuickMenu"))])
+	config.workaround.blueswitch = ConfigSelection(default = "0", choices = [("0", _("ExtrAddons/Extensions")), ("1", _("Extensions/ExtrAddons"))])
 	config.workaround.deeprecord = ConfigYesNo(default = False)
 	config.workaround.wakeuptime = ConfigSelectionNumber(default = 5, stepwidth = 1, min = 0, max = 30, wraparound = True)
 	config.workaround.wakeupwindow = ConfigSelectionNumber(default = 5, stepwidth = 5, min = 5, max = 60, wraparound = True)
@@ -49,7 +49,7 @@ def InitUsageConfig():
 
 	# just merge note, config.usage.servicelist_column was allready there
 	choicelist = [("-1", _("Disable")), ("0", _("Eventname only"))]
-	for i in range(100,1300,100):
+	for i in range(100,1325,25):
 		choicelist.append(("%d" % i, ngettext("%d pixel wide", "%d pixels wide", i) % i))
 	config.usage.servicelist_column = ConfigSelection(default="-1", choices=choicelist)
 	config.usage.servicelist_column.addNotifier(refreshServiceList)
@@ -333,7 +333,7 @@ def InitUsageConfig():
 
 	config.usage.blinking_display_clock_during_recording = ConfigYesNo(default = False)
 	
-	if getBoxType() in ('et7000', 'et7500', 'et8000', 'triplex', 'formuler1', 'mutant1200', 'solo2', 'mutant1265', 'mutant1100', 'mutant500c', 'mutant1500', 'osminiplus', 'ax51', 'mutant51'):
+	if getBoxType() in ('et7000', 'et7500', 'et8000', 'triplex', 'formuler1', 'mutant1200', 'solo2', 'mutant1265', 'mutant1100', 'mutant500c', 'mutant530c', 'mutant1500', 'osminiplus', 'ax51', 'mutant51', '9910lx', '9911lx'):
 		config.usage.blinking_rec_symbol_during_recording = ConfigSelection(default = "Channel", choices = [
 						("Rec", _("REC Symbol")), 
 						("RecBlink", _("Blinking REC Symbol")), 
@@ -508,7 +508,7 @@ def InitUsageConfig():
 	config.network = ConfigSubsection()
 	if SystemInfo["WakeOnLAN"]:
 		def wakeOnLANChanged(configElement):
-			if getBoxType() in ('et7000', 'et7100', 'et7500', 'gbx1', 'gbx3', 'et10000', 'gbquadplus', 'gbquad', 'gb800ueplus', 'gb800seplus', 'gbultraue', 'gbultrase', 'gbipbox', 'quadbox2400', 'mutant2400', 'et7x00', 'et8500', 'et8500s'):
+			if getBoxType() in ('et7000', 'et7100', 'et7500', 'gbx1', 'gbx2', 'gbx3', 'gbx3h', 'et10000', 'gbquadplus', 'gbquad', 'gb800ueplus', 'gb800seplus', 'gbultraue', 'gbultraueh', 'gbultrase', 'gbipbox', 'quadbox2400', 'mutant2400', 'et7x00', 'et8500', 'et8500s'):
 				open(SystemInfo["WakeOnLAN"], "w").write(configElement.value and "on" or "off")
 			else:
 				open(SystemInfo["WakeOnLAN"], "w").write(configElement.value and "enable" or "disable")
@@ -685,7 +685,7 @@ def InitUsageConfig():
 		if i == 0:
 			subtitle_delay_choicelist.append(("0", _("No delay")))
 		else:
-			subtitle_delay_choicelist.append(("%d" % i, "%2.1f sec" % (i / 90000.)))
+			subtitle_delay_choicelist.append(("%d" % i, _("%2.1f sec") % (i / 90000.)))
 	config.subtitles.subtitle_noPTSrecordingdelay = ConfigSelection(default = "315000", choices = subtitle_delay_choicelist)
 
 	config.subtitles.dvb_subtitles_yellow = ConfigYesNo(default = False)

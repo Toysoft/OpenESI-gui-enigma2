@@ -743,6 +743,10 @@ void eDVBFrontend::feEvent(int w)
 {
 	eDVBFrontend *sec_fe = this;
 	long tmp = m_data[LINKED_PREV_PTR];
+#if HAVE_AMLOGIC
+			if (w < 0)
+				return;
+#endif
 	while (tmp != -1)
 	{
 		eDVBRegisteredFrontend *linked_fe = (eDVBRegisteredFrontend*)tmp;
@@ -754,6 +758,28 @@ void eDVBFrontend::feEvent(int w)
 		dvb_frontend_event event;
 		int res;
 		int state;
+#if HAVE_AMLOGIC
+		if((res = ::ioctl(m_fd, FE_READ_STATUS, &event.status)) != 0)
+		{
+			break;
+		}
+
+		else
+		{
+			if(event.status == 0)
+			{
+				break;
+			}
+		}
+		usleep(10000);
+		if (event.status & FE_HAS_LOCK)
+		{
+			state = stateLock;
+			/* FIXME: gg this because FE_READ_STATUS always returns */
+			if(m_state == state)
+				break; /* I do not see any other way out */
+		}
+#else
 		res = ::ioctl(m_fd, FE_GET_EVENT, &event);
 
 		if (res && (errno == EAGAIN))
@@ -767,6 +793,7 @@ void eDVBFrontend::feEvent(int w)
 		{
 			state = stateLock;
 		}
+#endif
 		else
 		{
 			if (m_tuning) {
@@ -996,6 +1023,8 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 		) // VU+
 	{
 		ret = (int)((((double(snr) / (65536.0 / 100.0)) * 0.1244) + 2.5079) * 100);
+		if (!strcmp(m_description, "Vuplus DVB-S NIM(AVL6222)"))
+			sat_max = 1490;
 	}
 	else if (!strcmp(m_description, "BCM7356 DVB-S2 NIM (internal)")) // VU+ Solo2
 	{

@@ -176,7 +176,7 @@ def getButtonSetupFunctions():
 	ButtonSetupFunctions.append((_("Start teletext"), "Infobar/startTeletext", "InfoBar"))
 	ButtonSetupFunctions.append((_("Show subservice selection"), "Infobar/subserviceSelection", "InfoBar"))
 	ButtonSetupFunctions.append((_("Show subtitle selection"), "Infobar/subtitleSelection", "InfoBar"))
-	ButtonSetupFunctions.append((_("Show subtitle quick menu"), "Infobar/subtitleQuickMenu", "InfoBar"))
+	ButtonSetupFunctions.append((_("Show subtitle extra addons"), "Infobar/subtitleExtrAddons", "InfoBar"))
 	ButtonSetupFunctions.append((_("Letterbox zoom"), "Infobar/vmodeSelection", "InfoBar"))
 	if SystemInfo["PIPAvailable"]:
 		ButtonSetupFunctions.append((_("Show PIP"), "Infobar/showPiP", "InfoBar"))
@@ -221,6 +221,7 @@ def getButtonSetupFunctions():
 	ButtonSetupFunctions.append((_("Language"), "Module/Screens.LanguageSelection/LanguageSelection", "Setup"))
 	ButtonSetupFunctions.append((_("OscamInfo Mainmenu"), "Module/Screens.OScamInfo/OscamInfoMenu", "Plugins"))
 	ButtonSetupFunctions.append((_("CCcamInfo Mainmenu"), "Module/Screens.CCcamInfo/CCcamInfoMain", "Plugins"))
+	ButtonSetupFunctions.append((_("Movieplayer"), "Infobar/showMoviePlayer", "Plugins"))
 	if os.path.isdir("/etc/ppanels"):
 		for x in [x for x in os.listdir("/etc/ppanels") if x.endswith(".xml")]:
 			x = x[:-4]

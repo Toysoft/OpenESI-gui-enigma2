@@ -704,9 +704,9 @@ class InfoBarShowHide(InfoBarScreenSaver):
 				self.hideTimer.start(idx*1000, True)
 		elif hasattr(self, "pvrStateDialog"):
 			self.hideTimer.stop()
-			idx = config.usage.infobar_timeout.index
-			if idx:
-				self.hideTimer.start(idx*1000, True)
+			#idx = config.usage.infobar_timeout.index
+			#if idx:
+			#	self.hideTimer.start(idx*1000, True)
 
 	def doShow(self):
 		self.show()
@@ -2499,8 +2499,10 @@ class InfoBarSeek:
 
 	def unPauseService(self):
 		if self.seekstate == self.SEEK_STATE_PLAY:
+			if self.seekAction <> 0: self.playpauseService()
 			#return 0 # if 'return 0', plays timeshift again from the beginning
 			return
+		self.doPause(False)
 		self.setSeekState(self.SEEK_STATE_PLAY)
 
 	def doPause(self, pause):
@@ -2555,19 +2557,26 @@ class InfoBarSeek:
 						return
 		except:
 			from sys import exc_info
-			print "[InfoBarGeneretics] error in 'def doSeekRelative'", exc_info()[:2]
+			print "[InfoBarGenerics] error in 'def doSeekRelative'", exc_info()[:2]
 
 		seekable = self.getSeek()
 		if seekable is None or int(seekable.getLength()[1]) < 1:
 			return
 		prevstate = self.seekstate
 
+		setpause = getMachineBuild() in ('hd51',) and 1 # 0/1 enable workaround for some boxes these in pause mode not seek to new position
 		if self.seekstate == self.SEEK_STATE_EOF:
 			if prevstate == self.SEEK_STATE_PAUSE:
 				self.setSeekState(self.SEEK_STATE_PAUSE)
 			else:
 				self.setSeekState(self.SEEK_STATE_PLAY)
+		elif setpause and self.seekstate == self.SEEK_STATE_PAUSE:
+			print "[InfoBarGenerics] workaround jump in pause mode"
+			setpause = 2
+			self.setSeekState(self.SEEK_STATE_PLAY)
 		seekable.seekRelative(pts<0 and -1 or 1, abs(pts))
+		if setpause == 2:
+			self.setSeekState(self.SEEK_STATE_PAUSE)
 		if abs(pts) > 100 and config.usage.show_infobar_on_skip.value:
 			self.showAfterSeek()
 
@@ -2955,7 +2964,7 @@ class InfoBarExtensions:
 			self["InstantExtensionsActions"] = HelpableActionMap(self, "InfobarExtensions",
 				{
 					"extensions": (self.bluekey_ex, _("Show extensions...")),
-					"quickmenu": (self.bluekey_qm, _("Show quickmenu...")),
+					"extraddons": (self.bluekey_qm, _("Show extraddons...")),
 					"showPluginBrowser": (self.showPluginBrowser, _("Show the plugin browser..")),
 					"showEventInfo": (self.SelectopenEventView, _("Show the infomation on current event.")),
 					"openTimerList": (self.showTimerList, _("Show the list of timers.")),
@@ -2969,7 +2978,7 @@ class InfoBarExtensions:
 			self["InstantExtensionsActions"] = HelpableActionMap(self, "InfobarExtensions",
 				{
 					"extensions": (self.bluekey_ex, _("view extensions...")),
-					"quickmenu": (self.bluekey_qm, _("Show quickmenu...")),
+					"extraddons": (self.bluekey_qm, _("Show extraddons...")),
 					"showPluginBrowser": (self.showPluginBrowser, _("Show the plugin browser..")),
 					"showDreamPlex": (self.showDreamPlex, _("Show the DreamPlex player...")),
 					"showEventInfo": (self.SelectopenEventView, _("Show the infomation on current event.")),
@@ -2991,25 +3000,25 @@ class InfoBarExtensions:
 		if config.workaround.blueswitch.value == "1":
 			self.showExtensionSelection()
 		else:
-			self.quickmenuStart()
+			self.extraddonsStart()
 
 	def bluekey_ex(self):
 		if config.workaround.blueswitch.value == "1":
-			self.quickmenuStart()
+			self.extraddonsStart()
 		else:
 			self.showExtensionSelection()
 
-	def quickmenuStart(self):
+	def extraddonsStart(self):
 		try:
 			if not self.session.pipshown:
-				from Plugins.Extensions.Esipanel.QuickMenu import QuickMenu
-				self.session.open(QuickMenu)
+				from Plugins.Extensions.Esipanel.Extraddons import ExtrAddons
+				self.session.open(ExtrAddons)
 			else:
 				self.showExtensionSelection()
 		except:
-			print "[INFOBARGENERICS] QuickMenu: error pipshow, starting Quick Menu"
-			from Plugins.Extensions.Esipanel.QuickMenu import QuickMenu
-			self.session.open(QuickMenu)
+			print "[INFOBARGENERICS] ExtrAddons: error pipshow, starting Quick Menu"
+			from Plugins.Extensions.Esipanel.ExtrAddons import ExtrAddons
+			self.session.open(ExtrAddons)
 
 	def SelectopenEventView(self):
 		try:
@@ -3609,30 +3618,30 @@ class InfoBarESIpanel:
 				p(session=self.session)
 				break
 
-class InfoBarQuickMenu:
+class InfoBarExtrAddons:
 	def __init__(self):
-		self["QuickMenuActions"] = HelpableActionMap(self, "InfoBarQuickMenu",
+		self["ExtrAddonsActions"] = HelpableActionMap(self, "InfoBarExtrAddons",
 				{
-					"quickmenu": (self.bluekey_qm, _("Quick Menu...")),
+					"extraddons": (self.bluekey_qm, _("Extr Addons...")),
 				})
 
 	def bluekey_qm(self):
 		if config.workaround.blueswitch.value == "1":
 			self.showExtensionSelection()
 		else:
-			self.quickmenuStart()			
+			self.extraddonsStart()			
 
-	def quickmenuStart(self):
+	def extraddonsStart(self):
 		try:
 			if not self.session.pipshown:
-				from Plugins.Extensions.Esipanel.QuickMenu import QuickMenu
-				self.session.open(QuickMenu)
+				from Plugins.Extensions.Esipanel.ExtrAddons import ExtrAddons
+				self.session.open(ExtrAddons)
 			else:
 				self.showExtensionSelection()
 		except:
-			print "[INFOBARGENERICS] QuickMenu: error pipshow, starting Quick Menu"
-			from Plugins.Extensions.Esipanel.QuickMenu import QuickMenu
-			self.session.open(QuickMenu)
+			print "[INFOBARGENERICS] ExtrAddons: error pipshow, starting Extr Addons"
+			from Plugins.Extensions.Esipanel.ExtrAddons import ExtrAddons
+			self.session.open(ExtrAddons)
 
 class InfoBarInstantRecord:
 	"""Instant Record - handles the instantRecord action in order to
@@ -3776,6 +3785,10 @@ class InfoBarInstantRecord:
 		elif answer[1] == "stop":
 			self.session.openWithCallback(self.stopCurrentRecording, TimerSelection, list)
 		elif answer[1] in ( "indefinitely" , "manualduration", "manualendtime", "event"):
+			from Components.About import about
+			if len(list) >= 2 and about.getChipSetString() in ('meson-6', 'meson-64'):
+				Notifications.AddNotification(MessageBox,_("Sorry only possible to record 2 channels at once"), MessageBox.TYPE_ERROR, timeout=5)
+				return
 			self.startInstantRecording(limitEvent = answer[1] in ("event", "manualendtime") or False)
 			if answer[1] == "manualduration":
 				self.changeDuration(len(self.recording)-1)
@@ -4266,7 +4279,7 @@ class InfoBarResolutionSelection:
 		tlist = []
 		tlist.append((_("Exit"), "exit")) 
 		tlist.append((_("Auto(not available)"), "auto"))
-		tlist.append(("Video: " + str(xres) + "x" + str(yres) + "@" + str(fpsFloat) + "hz", ""))
+		tlist.append((_("Video: ") + str(xres) + "x" + str(yres) + "@" + str(fpsFloat) + "hz", ""))
 		tlist.append(("--", ""))
 		if choices != []:
 			for x in choices:
@@ -4754,7 +4767,7 @@ class InfoBarSubtitleSupport(object):
 		else:
 			return 0
 
-	def subtitleQuickMenu(self):
+	def subtitleExtrAddons(self):
 		service = self.session.nav.getCurrentService()
 		subtitle = service and service.subtitle()
 		subtitlelist = subtitle and subtitle.getSubtitleList()
@@ -4883,7 +4896,7 @@ class InfoBarHdmi:
 		self.hdmi_enabled_full = False
 		self.hdmi_enabled_pip = False
 
-		if getMachineBuild() in ('inihdp', 'hd2400', 'dm7080', 'dm820'):
+		if getMachineBuild() in ('inihdp', 'hd2400', 'dm7080', 'dm820', 'dm900'):
 			if not self.hdmi_enabled_full:
 				self.addExtension((self.getHDMIInFullScreen, self.HDMIInFull, lambda: True), "blue")
 			if not self.hdmi_enabled_pip:
@@ -4933,7 +4946,7 @@ class InfoBarHdmi:
 			return _("Turn off HDMI-IN PiP mode")
 
 	def HDMIInPiP(self):
-		if getMachineBuild() in ('dm7080', 'dm820'):
+		if getMachineBuild() in ('dm7080', 'dm820', 'dm900'):
 			f=open("/proc/stb/hdmi-rx/0/hdmi_rx_monitor","r")
 			check=f.read()
 			f.close()
@@ -4971,7 +4984,7 @@ class InfoBarHdmi:
 					del self.session.pip
 
 	def HDMIInFull(self):
-		if getMachineBuild() in ('dm7080', 'dm820'):
+		if getMachineBuild() in ('dm7080', 'dm820', 'dm900'):
 			f=open("/proc/stb/hdmi-rx/0/hdmi_rx_monitor","r")
 			check=f.read()
 			f.close()

@@ -34,7 +34,7 @@ class EventViewContextMenu(Screen):
 			})
 
 		try:
-			if config.skin.primary_skin.value.startswith('Elgato-HD/'):
+			if config.skin.primary_skin.value.startswith('Elgato-HD-CN/'):
 				count = 0
 				for entry in menu:
 					menu[count] = ("        " + entry[0], entry[1])
@@ -228,7 +228,9 @@ class EventViewBase:
 		if short == text:
 			short = ""
 
-		if short and extended:
+		if short and extended and extended.replace('\n','') == short.replace('\n',''):
+			pass #extended = extended
+		elif short and extended:
 			extended = short + '\n' + extended
 		elif short:
 			extended = short
