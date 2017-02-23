@@ -5,7 +5,7 @@ exec_prefix=@exec_prefix@
 datarootdir=@datarootdir@
 
 #wetek kodi start
-if [ -e /usr/lib/kodi/kodi.sh ]; then
+if [ -e /usr/bin/kodi ]; then
 	if [ -e /etc/.kodistart ]; then
 		rm -f /etc/.kodistart
 		echo 0 >  /sys/class/video/disable_video
@@ -40,6 +40,7 @@ if [ "$(grep config.misc.SyncTimeUsing /etc/enigma2/settings)" == "config.misc.S
 fi
 
 if [ -x @bindir@/showiframe ]; then
+        killall -9 showiframe; sleep 1
 	if [ -f @sysconfdir@/enigma2/backdrop.mvi ]; then
 		@bindir@/showiframe @sysconfdir@/enigma2/backdrop.mvi
 	elif [ -f @datadir@/backdrop.mvi ]; then
