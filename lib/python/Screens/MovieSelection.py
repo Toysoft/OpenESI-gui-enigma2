@@ -352,6 +352,7 @@ class MovieContextMenu(Screen, ProtectedScreen):
 		self["HelpWindow"].hide()
 		self["VKeyIcon"] = Boolean(False)
 		self['footnote'] = Label("")
+		self['description'] = Label("")
 		self["status"] = StaticText()
 
 		self.csel = csel
@@ -2023,7 +2024,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 		self.session.open(NetworkSetup.NetworkMountsMenu)
 
 	def showDeviceMounts(self):
-		from Plugins.Extensions.Esipanel.MountManager import HddMount
+		from Plugins.Extensions.Infopanel.MountManager import HddMount
 		self.session.open(HddMount)
 
 	def showActionFeedback(self, text):

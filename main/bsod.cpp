@@ -194,7 +194,7 @@ void bsodFatal(const char *component)
 
 		XmlGenerator xml(f);
 
-		xml.open("openESI");
+		xml.open("openesi");
 
 		xml.open("enigma2");
 		xml.string("crashdate", tm_str);
@@ -365,5 +365,5 @@ void bsodCatchSignals()
 
 void bsodLogInit()
 {
-	logOutput.connect(addToLogbuffer);
+	logOutput.connect(static_cast<void (*)(int, const std::string &  )>(addToLogbuffer));
 }

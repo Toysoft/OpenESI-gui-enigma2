@@ -1,5 +1,1 @@
-Enigma2
-
------------
-
-OpenESI E2
+OpenESI ENIGMA2

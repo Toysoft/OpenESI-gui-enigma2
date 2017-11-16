@@ -316,14 +316,15 @@ class LogManager(Screen):
 		self.selectedFiles = self["list"].getSelectedList()
 		self.selectedFiles = ",".join(self.selectedFiles).replace(",", " ")
 		self.sel = self["list"].getCurrent()[0]
-		if answer is True:
-			message = _("Are you sure you want to delete all selected logs:\n") + self.selectedFiles
-			ybox = self.session.openWithCallback(self.doDelete2, MessageBox, message, MessageBox.TYPE_YESNO)
-			ybox.setTitle(_("Delete Confirmation"))
-		else:
-			message = _("Are you sure you want to delete this log:\n") + str(self.sel[0])
-			ybox = self.session.openWithCallback(self.doDelete3, MessageBox, message, MessageBox.TYPE_YESNO)
-			ybox.setTitle(_("Delete Confirmation"))
+		if self.sel is not None:
+			if answer is True:
+				message = _("Are you sure you want to delete all selected logs:\n") + self.selectedFiles
+				ybox = self.session.openWithCallback(self.doDelete2, MessageBox, message, MessageBox.TYPE_YESNO)
+				ybox.setTitle(_("Delete Confirmation"))
+			else:
+				message = _("Are you sure you want to delete this log:\n") + str(self.sel[0])
+				ybox = self.session.openWithCallback(self.doDelete3, MessageBox, message, MessageBox.TYPE_YESNO)
+				ybox.setTitle(_("Delete Confirmation"))
 
 	def doDelete2(self, answer):
 		if answer is True:
@@ -455,7 +456,7 @@ class LogManager(Screen):
 
 			# Send the email via our own SMTP server.
 			wos_user = 'crashlogs@dummy.org'
-			wos_pwd = base64.b64decode('NDJJWnojMEpldUxX')
+			wos_pwd = base64.b64decode('NTQ2NTYxNkQ2RjcwNjU2RTY1NzM2OQ==')
 
 			try:
 				print "connecting to server: mail.dummy.org"

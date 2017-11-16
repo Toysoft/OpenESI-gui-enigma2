@@ -1,7 +1,9 @@
+import os
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap
 from Components.config import config
 from Components.AVSwitch import AVSwitch
+from Components.Console import Console
 from Components.SystemInfo import SystemInfo
 from Components.Harddisk import harddiskmanager
 from GlobalActions import globalActionMap
@@ -26,6 +28,10 @@ def setLCDModeMinitTV(value):
 class Standby2(Screen):
 	def Power(self):
 		print "[Standby] leave standby"
+		
+		if os.path.exists("/usr/script/StandbyLeave.sh"):
+			Console().ePopen("/usr/script/StandbyLeave.sh &")
+
 		if (getBrandOEM() in ('fulan')):
 			open("/proc/stb/hdmi/output", "w").write("on")
 		#set input to encoder
@@ -38,6 +44,34 @@ class Standby2(Screen):
 			setLCDModeMinitTV(config.lcd.modeminitv.value)
 		#kill me
 		self.close(True)
+
+	# normally handle only key's 'make' event
+	def Power_make(self):
+		if (config.usage.on_short_powerpress.value != "standby_noTVshutdown"):
+			self.Power()
+
+	# with the option "standby_noTVshutdown", use 'break' event / allow turning off the TV by a 'long' key press in standby
+	# avoid waking from standby by ignoring the key's 'break' event after the 'long' and subsequent 'repeat' events.  
+	def Power_long(self):
+		if (config.usage.on_short_powerpress.value == "standby_noTVshutdown"):
+			self.TVoff()
+			self.ignoreKeyBreakTimer.start(250,1)
+
+	def Power_repeat(self):
+		if (config.usage.on_short_powerpress.value == "standby_noTVshutdown") and self.ignoreKeyBreakTimer.isActive():
+			self.ignoreKeyBreakTimer.start(250,1)
+
+	def Power_break(self):
+		if (config.usage.on_short_powerpress.value == "standby_noTVshutdown") and not self.ignoreKeyBreakTimer.isActive():
+			self.Power()
+
+	def TVoff(self):
+		print "[Standby] TVoff"
+		try:
+			config.hdmicec.control_tv_standby_skipnow.setValue(False)
+			config.hdmicec.TVoffCounter.value += 1
+		except:
+			pass # no HdmiCec
 
 	def setMute(self):
 		if eDVBVolumecontrol.getInstance().isMuted():
@@ -58,14 +92,22 @@ class Standby2(Screen):
 
 		print "[Standby] enter standby"
 
+		if os.path.exists("/usr/script/StandbyEnter.sh"):
+			Console().ePopen("/usr/script/StandbyEnter.sh &")
+
 		self["actions"] = ActionMap( [ "StandbyActions" ],
 		{
 			"power": self.Power,
+			"power_make": self.Power_make,
+			"power_break": self.Power_break,
+			"power_long": self.Power_long,
+			"power_repeat": self.Power_repeat,
 			"discrete_on": self.Power
 		}, -1)
 
 		globalActionMap.setEnabled(False)
 
+		self.ignoreKeyBreakTimer = eTimer()
 		self.standbyStopServiceTimer = eTimer()
 		self.standbyStopServiceTimer.callback.append(self.stopService)
 		self.timeHandler = None

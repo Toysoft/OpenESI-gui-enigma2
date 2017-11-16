@@ -3,6 +3,7 @@ SUBDIRS = fonts keymaps
 dist_pkgdata_DATA = \
 	encoding.conf \
 	keymap.xml \
+	keytranslation.xml \
 	keymap.ntr \
 	keymap.u80 \
 	menu.xml \
@@ -55,6 +56,10 @@ if HAVE_COLORLCD720
 SUBDIRS += display720
 endif
 
+if HAVE_COLORLCD800
+SUBDIRS += display800
+endif
+
 if HAVE_BWLCD255
 SUBDIRS += vfd255
 endif
@@ -73,4 +78,8 @@ endif
 
 if HAVE_GRAUTEC70X0
 SUBDIRS += grautec70x0
+endif
+
+if HAVE_7SEGMENT
+SUBDIRS += 7segment
 endif
