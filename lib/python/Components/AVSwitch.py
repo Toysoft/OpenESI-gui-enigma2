@@ -2,7 +2,7 @@ from config import config, ConfigSlider, ConfigSelection, ConfigSubDict, ConfigY
 from Components.About import about
 from Tools.CList import CList
 from Tools.HardwareInfo import HardwareInfo
-from enigma import eAVSwitch, eDVBVolumecontrol, getDesktop
+from enigma import eAVSwitch, getDesktop
 from boxbranding import getBoxType, getMachineBuild, getBrandOEM
 from SystemInfo import SystemInfo
 import os
@@ -75,7 +75,7 @@ class AVSwitch:
 	if (about.getChipSetString() in ('7366', '7376', '5272s', '7444', '7445', '7445s')):
 		modes["HDMI"] = ["720p", "1080p", "2160p", "1080i", "576p", "576i", "480p", "480i"]
 		widescreen_modes = {"720p", "1080p", "1080i", "2160p"}
-	elif (about.getChipSetString() in ('7252', '7251', '7251S', '7252S', '7251s', '7252s', '7444s', '3798mv200')):
+	elif (about.getChipSetString() in ('7252', '7251', '7251S', '7252S', '7251s', '7252s', '7444s')):
 		modes["HDMI"] = ["720p", "1080p", "2160p", "2160p30", "1080i", "576p", "576i", "480p", "480i"]
 		widescreen_modes = {"720p", "1080p", "1080i", "2160p", "2160p30"}
 	elif (about.getChipSetString() in ('7241', '7358', '7362', '73625', '7346', '7356', '73565', '7424', '7425', '7435', '7552', '7581', '7584', '7585', 'pnx8493', '7162', '7111')) or (hw_type in ('elite', 'premium', 'premium+', 'ultra', "me", "minime")):
@@ -98,9 +98,9 @@ class AVSwitch:
 	# if modes.has_key("DVI-PC") and not getModeList("DVI-PC"):
 	# 	print "remove DVI-PC because of not existing modes"
 	# 	del modes["DVI-PC"]
-	if modes.has_key("YPbPr") and getBoxType() in ('vuuno4kse','dinobot4k','lunix','purehdse','lunix34k','sf5008','et13000','zgemmah6','vipert2c','vipercombo','vipercombohdd','e4hdultra','evoslimse','evoslimt2c','beyonwizu4','zgemmah4','osnino','axultra','gbue4k','spycat4kcombo','spycat4k','valalinux','formuler4ip','formuler3ip','tm4ksuper','galaxy4k','zgemmah52splus','zgemmah2splus','zgemmah7','zgemmah32tc','zgemmah52tc','alphatriple','gi11000','spycat4kmini','tmtwin4k','tmnanom3','tiviarmin','vimastec1000','vimastec1500', 'gbquad4k','revo4k','force3uhdplus','force3uhd','force2nano','evoslim','zgemmah5ac', 'zgemmah3ac', 'bre2zet2c', 'dm900', 'dm920', 'wetekplay', 'wetekplay2', 'wetekhub', 'bre2ze4k', 'vuuno4k', 'vuultimo4k', 'sf4008', 'e4hdcombo', 'ultrabox', 'osmega', 'tmnano3t', 'novaip', 'novacombo', 'novatwin', 'dm520', 'dm525', 'megaforce2', 'purehd', 'sf128', 'sf138', 'mutant11', 'xpeedlxpro', 'mbtwinplus', 'mutant51', 'ax51', 'twinboxlcdci5' , 'twinboxlcdci', 'singleboxlcd', 'formuler4', 'formuler4turbo', 'zgemmah5', 'zgemmah52s', 'zgemmai55', 'sf98', 'odinplus', 'zgemmaslc', '9900lx', '9910lx', '9911lx', 'vusolo4k', 'et7x00mini', 'evomini', 'evominiplus', 'zgemmahs', 'zgemmah2s', 'zgemmah2h', 't2cable', 'xpeedlxcs2', 'xpeedlxcc', 'osmini', 'osminiplus', 'gbx1', 'gbx2', 'gbx3', 'gbx3h', 'sf3038', 'spycat', 'bwidowx', 'bwidowx2', 'fegasusx3', 'fegasusx5s', 'fegasusx5t', 'force2', 'force2plus', 'force2plushv', 'optimussos', 'tmnanose', 'tmnanosem2', 'tmnanosem2plus', 'tmnanocombo', 'zgemmash1', 'zgemmash2', 'zgemmas2s', 'zgemmass', 'mago', 'enibox', 'sf108', 'x1plus', 'xcombo', 'mutant1100', 'mutant1200', 'mutant1265', 'mutant1500', 'mutant500c', 'mutant530c', 'et4x00', 'et7500', 'et7000', 'et7100', 'et8500', 'et8500s', 'xp1000mk', 'xp1000max', 'xp1000plus', 'sf8', 'tm2t', 'tmsingle', 'vusolo2', 'tmnano', 'iqonios300hd', 'iqonios300hdv2', 'classm', 'axodin', 'axodinc', 'genius', 'evo', 'galaxym6', 'geniuse3hd', 'evoe3hd', 'axase3', 'axase3c', 'dm500hdv2', 'dm500hd', 'dm800', 'mixosf7', 'mixoslumi', 'mixosf5mini', 'gi9196lite', 'ixusszero', 'optimussos1', 'enfinity', 'marvel1', 'bre2ze', 'sezam1000hd', 'mbmini', 'atemio5x00', 'xpeedlx1', 'xpeedlx2', 'vusolose', 'gbipbox', 'formuler3', 'optimussos3plus', 'force1plus', 'vuzero', 'vizyonvita') or (about.getModelString() == 'ini-3000'):
+	if modes.has_key("YPbPr") and getBoxType() in ('zgemmah6','vipert2c','vipercombo','vipercombohdd','e4hdultra','evoslimse','evoslimt2c','beyonwizu4','zgemmah4','osnino','axultra','gbue4k','spycat4kcombo','spycat4k','valalinux','formuler4ip','formuler3ip','tm4ksuper','galaxy4k','zgemmah52splus','zgemmah2splus','zgemmah7','zgemmah32tc','zgemmah52tc','alphatriple','gi11000','spycat4kmini','tmtwin4k','tmnanom3','tiviarmin','vimastec1000','vimastec1500', 'gbquad4k','revo4k','force3uhdplus','force3uhd','force2nano','evoslim','zgemmah5ac', 'zgemmah3ac', 'bre2zet2c', 'dm900', 'dm920', 'wetekplay', 'wetekplay2', 'wetekhub', 'bre2ze4k', 'vuuno4k', 'vuultimo4k', 'sf4008', 'e4hdcombo', 'ultrabox', 'osmega', 'tmnano3t', 'novaip', 'novacombo', 'novatwin', 'dm520', 'dm525', 'megaforce2', 'purehd', 'sf128', 'sf138', 'mutant11', 'xpeedlxpro', 'mbtwinplus', 'mutant51', 'ax51', 'twinboxlcdci5' , 'twinboxlcdci', 'singleboxlcd', 'formuler4', 'formuler4turbo', 'zgemmah5', 'zgemmah52s', 'zgemmai55', 'sf98', 'odinplus', 'zgemmaslc', '9900lx', '9910lx', '9911lx', 'vusolo4k', 'et7x00mini', 'evomini', 'evominiplus', 'zgemmahs', 'zgemmah2s', 'zgemmah2h', 't2cable', 'xpeedlxcs2', 'xpeedlxcc', 'osmini', 'osminiplus', 'gbx1', 'gbx2', 'gbx3', 'gbx3h', 'sf3038', 'spycat', 'bwidowx', 'bwidowx2', 'fegasusx3', 'fegasusx5s', 'fegasusx5t', 'force2', 'force2plus', 'force2plushv', 'optimussos', 'tmnanose', 'tmnanosem2', 'tmnanosem2plus', 'tmnanocombo', 'zgemmash1', 'zgemmash2', 'zgemmas2s', 'zgemmass', 'mago', 'enibox', 'sf108', 'x1plus', 'xcombo', 'mutant1100', 'mutant1200', 'mutant1265', 'mutant1500', 'mutant500c', 'mutant530c', 'et4x00', 'et7500', 'et7000', 'et7100', 'et8500', 'et8500s', 'xp1000mk', 'xp1000max', 'xp1000plus', 'sf8', 'tm2t', 'tmsingle', 'vusolo2', 'tmnano', 'iqonios300hd', 'iqonios300hdv2', 'classm', 'axodin', 'axodinc', 'genius', 'evo', 'galaxym6', 'geniuse3hd', 'evoe3hd', 'axase3', 'axase3c', 'dm500hdv2', 'dm500hd', 'dm800', 'mixosf7', 'mixoslumi', 'mixosf5mini', 'gi9196lite', 'ixusszero', 'optimussos1', 'enfinity', 'marvel1', 'bre2ze', 'sezam1000hd', 'mbmini', 'atemio5x00', 'xpeedlx1', 'xpeedlx2', 'vusolose', 'gbipbox', 'formuler3', 'optimussos3plus', 'force1plus', 'vuzero', 'vizyonvita') or (about.getModelString() == 'ini-3000'):
 		del modes["YPbPr"]
-	if modes.has_key("Scart") and getBoxType() in ('vuuno4kse','lunix','purehdse','sf5008','et13000','e4hdultra','beyonwizu4','osnino','axultra','gbue4k','gi11000','spycat4kmini','tmtwin4k','tmnanom3','gbquad4k','revo4k','force3uhd','force2nano','dm900', 'dm920', 'wetekplay', 'wetekplay2', 'wetekhub', 'bre2ze4k', 'vuuno4k', 'vuultimo4k', 'sf4008', 'novaip', 'dm520', 'dm525', 'purehd', 'vusolo4k', 'fusionhdse', 'fusionhd', 'force2', 'force2plus', 'force2plushv', 'optimussos', 'tmnanose', 'tmnanosecombo', 'gbx1', 'gbx2', 'gbx3', 'gbx3h', 'gbultraue', 'gbultraueh', 'zgemmai55', 'mutant1500'):
+	if modes.has_key("Scart") and getBoxType() in ('e4hdultra','beyonwizu4','osnino','axultra','gbue4k','gi11000','spycat4kmini','tmtwin4k','tmnanom3','gbquad4k','revo4k','force3uhd','force2nano','dm900', 'dm920', 'wetekplay', 'wetekplay2', 'wetekhub', 'bre2ze4k', 'vuuno4k', 'vuultimo4k', 'sf4008', 'novaip', 'dm520', 'dm525', 'purehd', 'vusolo4k', 'fusionhdse', 'fusionhd', 'force2', 'force2plus', 'force2plushv', 'optimussos', 'tmnanose', 'tmnanosecombo', 'gbx1', 'gbx2', 'gbx3', 'gbx3h', 'gbultraue', 'gbultraueh', 'zgemmai55', 'mutant1500'):
 		del modes["Scart"]
 		
 	if getBoxType() in ('mutant2400'):
@@ -452,6 +452,7 @@ def InitAVSwitch():
 			"50,60": _("50p/60p"),
 			"60,50": _("60p/50p"),
 			"60,60": _("60p/60p")
+				}  # first value <=720p , second value > 720p
 	config.av.autores_24p =  ConfigSelection(choices=choicelist, default="50,24")
 	config.av.autores_25p =  ConfigSelection(choices=choicelist, default="50,25")
 	config.av.autores_30p =  ConfigSelection(choices=choicelist, default="60,30")
@@ -501,11 +502,11 @@ def InitAVSwitch():
 	config.av.policy_169 = ConfigSelection(choices=policy2_choices, default = "letterbox")
 	policy_choices = {
 	# TRANSLATORS: (aspect ratio policy: black bars on left/right) in doubt, keep english term.
-	"pillarbox": _("Pillarbox"),
+	"panscan": _("Pillarbox"),
 	# TRANSLATORS: (aspect ratio policy: cropped content on left/right) in doubt, keep english term
-	"panscan": _("Pan&scan"),
+	"letterbox": _("Pan&scan"),
 	# TRANSLATORS: (aspect ratio policy: display as fullscreen, with stretching the left/right)
-	"nonlinear": _("Nonlinear"),
+	# "nonlinear": _("Nonlinear"),
 	# TRANSLATORS: (aspect ratio policy: display as fullscreen, even if this breaks the aspect)
 	"bestfit": _("Just scale")}
 	if os.path.exists("/proc/stb/video/policy_choices"):
@@ -514,7 +515,7 @@ def InitAVSwitch():
 			# TRANSLATORS: (aspect ratio policy: always try to display as fullscreen, when there is no content (black bars) on left/right, even if this breaks the aspect.
 			policy_choices.update({"auto": _("Auto")})
 		f.close()
-	config.av.policy_43 = ConfigSelection(choices=policy_choices, default = "pillarbox")
+	config.av.policy_43 = ConfigSelection(choices=policy_choices, default = "panscan")
 	config.av.tvsystem = ConfigSelection(choices = {"pal": _("PAL"), "ntsc": _("NTSC"), "multinorm": _("multinorm")}, default="pal")
 	config.av.wss = ConfigEnableDisable(default = True)
 	config.av.generalAC3delay = ConfigSelectionNumber(-1000, 1000, 5, default = 0)
@@ -596,7 +597,7 @@ def InitAVSwitch():
 				f.close()
 			except:
 				pass
-		if getBoxType() in ('vusolo4k','vuuno4k','vuuno4kse','vuultimo4k'):
+		if getBoxType() in ('vusolo4k','vuuno4k','vuultimo4k'):
 			config.av.hdmicolorspace = ConfigSelection(choices={
 					"Edid(Auto)": _("Auto"),
 					"Hdmi_Rgb": _("RGB"),
@@ -807,12 +808,6 @@ def InitAVSwitch():
 			open("/proc/stb/audio/multichannel_pcm", "w").write(configElement.value and "enable" or "disable")
 		config.av.pcm_multichannel = ConfigYesNo(default = False)
 		config.av.pcm_multichannel.addNotifier(setPCMMultichannel)
-
-	def setVolumeStepsize(configElement):
-		eDVBVolumecontrol.getInstance().setVolumeSteps(int(configElement.value))
-	config.av.volume_stepsize = ConfigSelectionNumber(1, 10, 1, default = 5)
-	config.av.volume_stepsize_fastmode = ConfigSelectionNumber(1, 10, 1, default = 5)
-	config.av.volume_stepsize.addNotifier(setVolumeStepsize)
 
 	try:
 		f = open("/proc/stb/audio/ac3_choices", "r")
